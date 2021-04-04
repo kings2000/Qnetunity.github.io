@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>QNetUnity</title>
+        <style>
+            body{
+                font-style:normal;
+                font-family:Arial, Helvetica, sans-serif;
+            }
+            .collapsible {
+                background-color: #777;
+                color: white;
+                cursor: pointer;
+                padding: 18px;
+                width: 100%;
+                border: none;
+                text-align: center;
+                outline: none;
+                font-size: 20px;
+            }
+
+            .active, .collapsible:hover {
+                background-color: #555;
+            }
+
+            .collapsible:after {
+                content: '\002B';
+                color: white;
+                font-weight: bold;
+                float: right;
+                margin-left: 5px;
+            }
+
+            .active:after {
+                content: "\2212";
+            }
+
+            .content {
+                padding: 0 18px;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.2s ease-out;
+                background-color: #f1f1f1;
+            }
+
+            #title {
+                text-align: center;
+            }
+
+            #heading{
+                color: coral;
+            }
+
+            a{
+                text-decoration-line: none;
+            }
+            pre code {
+                background-color: #eee;
+                border: 1px solid #999;
+                display: block;
+                padding: 20px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="title">
+            <h2>QNetUnity Documentation</h2>
+        </div>
+        <div>
+            <button class="collapsible">Classes</button>
+            <div class="content">
+                <ul>
+                    <li>
+                        <h4 id="heading">QNetNetwork</h4>
+                        <p>Brain of the whole network. Hanldes connection, Disconnection, Instansiation, Destroy, RPC etc.</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">NetworkManager</h4>
+                        <p>Handle serialiation update on the netowrk.</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">NetPlayer</h4>
+                        <p>Identifies a player on the network as a client.</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">NetView</h4>
+                        <p>Identifies a GameObject netowrk entity.</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">NetMessageHandler</h4>
+                        <p>Handles custom messages to be sent over the network.</p>
+                        <p>You can create a custom message an Inherite BaseMessage class.</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">NetworkPrefabsObjects</h4>
+                        <p>Holdes Netview entities that will be created or destroyed on the network.</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">NetworkSettings</h4>
+                        <p>Local network setting, holding information that is needed for connection and serialiation rate for both client on server.</p>
+                    </li>
+                </ul>
+            </div>  
+        </div>
+
+        <div>
+            <button class="collapsible">Methods</button>
+            <div class="content">
+                <ul>
+                    <li>
+                        <h4 id="heading">QNetNetwork.StartServer(NetworkType)</h4>
+                        <p>Start a local UDP server using the NetworkSettings information. Check the Component Section</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">QNetNetwork.ConnectUsingSettings(NetworkType) | QNetNetwork.ConnectToServer(NetworkType, Ip, port)</h4>
+                        <p>Connect to a local server UPD server, using the NetworkSettings information</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">QNetNetwork.StopServer()</h4>
+                        <p>Stop the running server</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">QNetNetwork.DisconnectAllClient()</h4>
+                        <p>Stop the running client</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">QNetNetwork.Instansiate(ObjectName, Position, Rotation)</h4>
+                        <p>Instansiate a network GameObject on the network. The GameObject to be instansiated must be regstered on the network. This will be reflected to all clients</p>
+                        <p>To register a GameObject go to QNetNetwork->QNetEditor->NetworkPrefabsObjects and add GameObjects to the list</p>
+                        <img src=".//EditorLocation.jpg">
+                    </li>
+                    <li>
+                        <h4 id="heading">QNetNetwork.Destroy(ObjectName)</h4>
+                        <p>Destroy a network GameObject on the network. This GameObject will be Destroy on the server and reflect to all connected clients</p>
+                        <p>To register a GameObject go to QNetNetwork->QNetEditor->NetworkPrefabsObjects and add GameObjects to the list</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">NetMessageHandler.SendMessage(Message)</h4>
+                        <p>Send custom message across the newtork. This dose note get called on all client, only Client->Server or Server->Client</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">NetView.RPC(MethodName, parameters[])</h4>
+                        <p>Make a remote proceduaral call across the network. To be sent from a netview object</p>
+                    </li>
+                </ul>
+            </div>  
+        </div>
+
+        <div>
+            <button class="collapsible">Callbacks</button>
+            <div class="content">
+                <ul>
+                    <li>
+                        <h4 id="heading">INetObservable</h4>
+                        <ul>
+                            <li>
+                                <p>OnNetSerialiazeView</p>
+                                <p>Callback for serialiation. objects that impleament this interface must have its component registed on the netview INetObservable list. See netview Component for more.</p>
+                                <img src=".//observables.PNG">
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <h4 id="heading">NetBehaviourCallback</h4>
+                        <p>Inherite this class to recive network events.</p>
+                        <p>Virtual Methodes:</p>
+                        <ul>
+                            <li><p>OnConnectedToMaster</p></li>
+                            <li><p>OnDisConnected(DisconnectionReasons)</p></li>
+                            <li><p>OnOtherPlayerConeected(NetPlayer)</p></li>
+                            <li><p>OnOtherPlayerDisconnected(NetPlayer, DisconnectionReasons)</p></li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </div>  
+        </div>
+
+        <div>
+            <button class="collapsible">Components</button>
+            <div class="content">
+                <img src=".//NetviewEditor.PNG">
+                <ul>
+                    <li>
+                        <h4 id="heading">Netview</h4>
+                        <p>Script component attached to any object that will be spawned on the network.</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">NetTransformView</h4>
+                        <p>Tranform component for syncing enity transform across the netowrk. Must be registered to the netview observables list for identification.</p>
+                    </li>
+                    <li>
+                        <h4 id="heading">NetRigidBodyView</h4>
+                    </li>
+                </ul>
+            </div>  
+        </div>
+
+        <div>
+            <button class="collapsible">Examples</button>
+            <div class="content">
+                <ul>
+                    <li>
+                        <h4 id="heading">Simple Npc Locomotion</h4>
+
+                        <p>First thing first, create a new unity project. Name it whatever you like 😒</p>
+                        <p>
+                            Get the latest <a href="">Package</a> and open it in the project. <br>
+                            Lets start with the Scene Setup. In the scene create a plane object, I named mine floor, And gave it a floor material.
+                        </p>
+                        <img src="./FloorSetup.PNG" >
+                        <p>Go to the model folder and drag the model to the scene.</p>
+                        <div><img src="./SwordManProps.PNG" > <img src="./ModelLocation.PNG" >  </div>
+                        <p>Now lets work on the Animation. Add the animator componet to the Swordman the create a new AnimationController and assing it to the animator.</p>
+                        <img src="./SwordManAnimationComponent.PNG">
+                        <p>For this example i will be using only one aniamtion. In the Animator Window of the Swordman AnimationController add the walk animation from the model. </p>
+                        <img src="./WalkAnimation.PNG">
+                        <p>Hit play and you should see the Swordman walking, but hmm he is stuck lets make him move. Create a new Script 
+                            <i>NetworkUnit.cs</i> and add the code below then attacth it to the player. The hit play.
+                        </p>
+                        <p>
+                            <pre>
+                                <code>
+                                    using System.Collections;
+                                    using System.Collections.Generic;
+                                    using UnityEngine;
+                                    public class NetworkUnit : MonoBehaviour
+                                    {
+
+                                        public float speed = 10;
+                                        public Animator animator;
+                                        public Vector3 currentPoint;
+                                        
+
+                                        void Start()
+                                        {
+                                            currentPoint = transform.position;
+                                        }
+
+                                        
+                                        void Update()
+                                        {
+                                            Move();
+                                        }
+
+                                        private void Move()
+                                        {
+                                            float dis = Vector3.Distance(currentPoint, transform.position);
+                                            if (dis <= 0.1f)
+                                            {
+                                                currentPoint = GetRandomPoint();
+                                            }
+                                            transform.position = Vector3.MoveTowards(transform.position, currentPoint, speed * Time.deltaTime);
+                                            Vector3 dir = (currentPoint - transform.position).normalized;
+                                            if(dir != Vector3.zero)
+                                            {
+                                                Quaternion newRotation = Quaternion.LookRotation(dir, Vector3.up);
+                                                transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, Time.deltaTime * 260);
+                                            }
+                                            
+                                        }
+
+                                        private Vector3 GetRandomPoint()
+                                        {
+                                            float x = Random.Range(-40, 40);
+                                            float z = Random.Range(-40, 40);
+                                            return new Vector3(x, 0, z);
+                                        }
+                                    }
+                                </code>
+                            </pre> 
+                        </p>
+                        <p>Now that the Swordman can go places, let add a network propety to make him identifyable on the network. Add the netview component to the swordman, and add a transformview component so we can sync his movement across the network 
+                            once done everythng should look like this below. We want ot sync the position and rotation on every change, remember to always register components that have the INetObservable on the netview that owns them. 
+                            Hit play and see the player moving around but nothing intresting is happening yet.
+                        </p>
+                        <img src="./NetviewEditor.PNG">
+                        <p>
+                            Lets make the swordman a prefab so we can register him. Then delete him from the scene. Now got to the QNetNetwork Editor Window  <img src="./EditorLocation.jpg"> 
+                            And add the created prefab to the network object list.
+                        </p>
+                        <img src="./QNetWindow.PNG">
+                        <p>
+                            Now lets do some commections. Create a new Script <i>ConnectionManager.cs</i> and add to any empty object in the scene. Add the code below.
+                        </p>
+
+                        <pre>
+                            <code>
+                                using UnityEngine;
+                                using QNetUnity;
+
+                                //inherite the NetBehaviourCallback for callback on the network
+                                public class ConnectionManager : NetBehaviourCallback
+                                {
+                                    
+                                    public bool isServer; //Identifies if its a server connection or not
+
+                                    void Awake()
+                                    {
+                                        Invoke(nameof(Init), 1);
+
+                                    }
+
+                                    //Connections
+                                    private void Init()
+                                    {
+                                        if (isServer)
+                                        {
+                                            QNetNetwork.StartServer(QNetUnity.NetEnums.NetworkType.UDP);
+                                        }
+                                        else
+                                        {
+                                            QNetNetwork.ConnectUsingSettings(QNetUnity.NetEnums.NetworkType.UDP);
+                                        }
+                                    }
+                                    //Callabck when we are connected to the network
+                                    public override void OnConnectedToMaster()
+                                    {
+                                        Debug.Log("i Am connected to the master");
+                                    }
+
+                                }
+
+                            </code>
+                        </pre>
+                        
+                        <p>
+                            So WTF is going on here?. Well first we have <i>isServer</i> props to let us know how we want to start the connection. When you start the project as server the network create a Udp port to which clients can connect.
+                            And when we start as a client we want to connect to a running server. Now lets test the connection. Add the open scene in the build settings scene list. in the ConnectionManager 
+                            inspector click enable isServer then build and run the project. When the standalone is running go to the ConnectionManager inspector an disable isServer flag, the hit play. If all is well 
+                            in the console you should see the "<i>i Am connected to the master</i>" message.
+                        </p>
+
+                        <p>
+                            Congratulations you just made your first connection. But its just boring lets add some objects.<br>
+                            Add the code below to the <i>ConnectionManager.cs</i> file. "SwordMan" is the name of the prefab we registered lately (check yours an make sure the name match with the prefab).
+                        </p>
+
+                        <pre>
+                            <code>
+                                public void OnClick()
+                                {
+                                    
+                                    if (QNetNetwork.networkinitialised && !isServer)
+                                    {
+                                        //Instansiate an object on the netowork
+                                        QNetNetwork.Instansiate("SwordMan", Vector3.zero, Quaternion.identity);
+                                    }
+                                }
+                            </code>
+                        </pre>
+                        <p>
+                            Lets add a button and assign its OnClick() method to the button click event. <br>
+                            After that start the server and client and click the button to create the SwordMan. You will see he appeares on both server and the client. If you face an error check you prfab name and try agian.
+                        </p>
+                        <p>
+                            Now lets make the player fully network support. Update the <i>NetworkUnit.cs</i> script as below
+                        </p>
+                        <pre>
+                            <code>
+                                using QNetUnity;
+                                using System.Collections;
+                                using System.Collections.Generic;
+                                using UnityEngine;
+
+                                public class NetworkUnit : MonoBehaviour
+                                {
+
+                                    public float speed = 10;
+                                    public Animator animator;
+                                    public Vector3 currentPoint;
+
+                                    public NetView netView; //the network view of this unit
+
+                                    void Start()
+                                    {
+                                        currentPoint = transform.position;
+                                    }
+
+                                    
+                                    void Update()
+                                    {
+                                        if (!QNetNetwork.networkinitialised) return;
+
+                                        //Check if its the local view to process this
+                                        //Thats on the client
+                                        if (netView.isLocal)
+                                        {
+                                            float dis = Vector3.Distance(currentPoint, transform.position);
+
+                                            if (dis <= 0.2f)
+                                            {
+                                                currentPoint = GetRandomPoint();
+                                                netView.RPC(nameof(UpdatePointRPC), currentPoint); //send an rpc call over the network
+
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //run this on the server
+                                            Move();
+                                        }
+
+                                    }
+
+                                    private void Move()
+                                    {
+                                       
+                                        transform.position = Vector3.MoveTowards(transform.position, currentPoint, speed * Time.deltaTime);
+                                        Vector3 dir = (currentPoint - transform.position).normalized;
+                                        if(dir != Vector3.zero)
+                                        {
+                                            Quaternion newRotation = Quaternion.LookRotation(dir, Vector3.up);
+                                            transform.rotation = Quaternion.RotateTowards(transform.rotation, newRotation, Time.deltaTime * 260);
+                                        }
+                                        
+                                    }
+
+                                    private Vector3 GetRandomPoint()
+                                    {
+                                        float x = Random.Range(-40, 40);
+                                        float z = Random.Range(-40, 40);
+                                        return new Vector3(x, 0, z);
+                                    }
+
+
+                                    [NetRPC]
+                                    private void UpdatePointRPC(Vector3 point) //Make an rpc call
+                                    {
+                                        currentPoint = point;
+                                    }
+                                }
+
+                            </code>
+                        </pre>
+                        <p>
+                            So basicaly instaed of calling the GetRandomPoint on both client and server we want the client to process that and send to network. Using the [NetRPC] flag tell Qnet that 
+                            the method to be called as it is registerd on the network. so when the UpdatePointRPC is called it will reflect on all the connected client event the calling client.
+                        </p>
+                    </li>
+                </ul>
+            </div>  
+        </div>
+        
+        <footer>
+            <div style="width: 100%; justify-content:flex-end; align-items:flex-end; text-align: center;">
+                <br>
+                <img src="./icon.png">
+            </div>
+            
+        </footer>
+
+        <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+        
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.maxHeight){
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                } 
+            });
+        }
+        </script>
+    </body>
+</html>
